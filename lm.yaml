@@ -1,0 +1,72 @@
+# ============================================================
+# CryptoAgent LLM Provider Configuration
+# ============================================================
+# Define up to 3 providers. Each provider has a base_url, api_key,
+# and its own RPM (requests per minute) limit.
+#
+# TOTAL SYSTEM RPM = sum of all provider RPMs.
+# Example: 3 providers × 10 RPM each = 30 RPM total throughput.
+#
+# ENSEMBLE VOTING: If a role has multiple models listed (across providers),
+# the system runs ALL of them and picks by majority vote (ties → HOLD/reject).
+# ============================================================
+
+providers:
+  lm1:
+    base_url: "https://api.bluesminds.com/v1"
+    api_key: "sk-grvv0ADBmTUYLacbkD4eQTDQj8JHS2Nbl3Uxnvd14LkDdrxv"
+    rpm: 6
+
+  # lm2:
+  #   base_url: "https://your-second-provider.com/v1"
+  #   api_key: "sk-your-key-here"
+  #   rpm: 10
+
+  # lm3:
+  #   base_url: "https://your-third-provider.com/v1"
+  #   api_key: "sk-your-key-here"
+  #   rpm: 10
+
+# ── Role ↔ Model Assignments ─────────────────────────────────────────────────
+# Each role lists one or more {provider, model} entries.
+# If multiple entries → ensemble voting is automatically activated.
+roles:
+  analyst:
+    - provider: lm1
+      model: "deepseek-ai/deepseek-v3.1"
+
+  strategist:
+    - provider: lm1
+      model: "deepseek-ai/deepseek-v3.1"
+
+  risk:
+    - provider: lm1
+      model: "deepseek-ai/deepseek-v3.1"
+
+  execution:
+    - provider: lm1
+      model: "deepseek-ai/deepseek-v3.1"
+
+# ── Trading Parameters ───────────────────────────────────────────────────────
+trading:
+  mode: "paper"              # paper | live
+  starting_balance: 2000.0
+  cycle_interval_sec: 60
+  max_open_positions: 3
+  min_trade_inr: 50.0
+  max_position_pct: 0.10
+  allow_leverage: true
+  max_leverage: 4
+  min_confidence_threshold: 0.80
+
+  pairs:
+    - "BTC-INR"
+    - "ETH-INR"
+    - "SOL-INR"
+    - "BNB-INR"
+    - "DOGE-INR"
+
+# ── Server ───────────────────────────────────────────────────────────────────
+server:
+  host: "127.0.0.1"
+  port: 8000
